@@ -41,5 +41,9 @@ CHIP ALU {
         ng;      // if (out < 0)  equals 1, else 0
 
     PARTS:
-    //// Replace this comment with your code.
+        And16(a = x, b[0..15] = false, out = zeroX);
+        And16(a = y, b[0..15] = false, out = zeroY);
+
+        Not16(in = x, out = negX);
+        Not16(in = y, out = negY);
 }
