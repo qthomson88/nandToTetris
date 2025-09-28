@@ -44,6 +44,42 @@ CHIP ALU {
         And16(a = x, b[0..15] = false, out = zeroX);
         And16(a = y, b[0..15] = false, out = zeroY);
 
-        Not16(in = x, out = negX);
-        Not16(in = y, out = negY);
+        // zx  nx  xInput
+        // 0   0   x
+        // 0   1   -x
+        // 1   0   0
+        // 1   1   -0
+        // zero the input if zx
+        Mux16(a = x, b = zeroX, sel = zx, out = xStageOne);
+        Mux16(a = y, b = zeroY, sel = zy, out = yStageOne);
+
+        Not16(in = xStageOne, out = notX);
+        Not16(in = yStageOne, out = notY);
+
+        // bitwise not whatever the input is, whether it was zeroized or not
+        Mux16(a = xStageOne, b = notX, sel = zx, out = xInput);
+        Mux16(a = yStageOne, b = notY, sel = zy, out = yInput);
+
+        Add16(a = xInput, b = yInput, out = sum);
+
+        And16(a = xInput, b = yInput, out = andOut);
+
+        // bitwise not the outputs, later we'll choose what output we want
+        Not16(in = sum, out = sumNot);
+        Not16(in = andOut, out = andOutNot);
+
+        // f  no  out
+        // 0  0   andOut
+        // 0  1   andOutNot
+        // 1  0   sum
+        // 1  1   sumNot
+        Mux4Way16(a = andOut, b = andOutNot, c = sum, d = sumNot, sel[0] = no, sel[1] = f, out[15] = ng, out[0..7] = outLowByte, out[8..15] = outHighByte, out = out);
+
+        Or8Way(in = outLowByte, out = lowByteOr);
+        Or8Way(in = outLowByte, out = highByteOr);
+
+        Not(in = lowByteOr, out = lowByteZero);
+        Not(in = highByteOr, out = highByteZero);
+
+        And(a = lowByteZero, b = highByteZero, out = zr);
 }
