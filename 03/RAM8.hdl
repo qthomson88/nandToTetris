@@ -13,14 +13,14 @@ CHIP RAM8 {
     OUT out[16];
 
     PARTS:
-    DMux8Way(in = load, sel = address, a = adrA, b = adrB, c = adrC, d = adrD, e = adrE, f = adrF, g = adrG, h = adrH);
-    Register(in = in, load = adrA, out = regA);
-    Register(in = in, load = adrB, out = regB);
-    Register(in = in, load = adrC, out = regC);
-    Register(in = in, load = adrD, out = regD);
-    Register(in = in, load = adrE, out = regE);
-    Register(in = in, load = adrF, out = regF);
-    Register(in = in, load = adrG, out = regG);
-    Register(in = in, load = adrH, out = regH);
-    Mux8Way16(a = regA, b = regB, c = regC, d = regD, e = regE, f = regF, g = regG, h = regH, sel = address, out = out); 
+        DMux8Way(in = load, sel = address, a = adrA, b = adrB, c = adrC, d = adrD, e = adrE, f = adrF, g = adrG, h = adrH);
+        Register(in = in, load = adrA, out = regA);
+        Register(in = in, load = adrB, out = regB);
+        Register(in = in, load = adrC, out = regC);
+        Register(in = in, load = adrD, out = regD);
+        Register(in = in, load = adrE, out = regE);
+        Register(in = in, load = adrF, out = regF);
+        Register(in = in, load = adrG, out = regG);
+        Register(in = in, load = adrH, out = regH);
+        Mux8Way16(a = regA, b = regB, c = regC, d = regD, e = regE, f = regF, g = regG, h = regH, sel = address, out = out);
 }

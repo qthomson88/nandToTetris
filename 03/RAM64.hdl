@@ -13,18 +13,16 @@ CHIP RAM64 {
     OUT out[16];
 
     PARTS:
-    // which register in the block of 8
-    DMux8Way(in = load, sel = address[0..2], a = adrA, b = adrB, c = adrC, d = adrD, e = adrE, f = adrF, g = adrG, h = adrH);
-    // which ram8
-    Mux8Way(a = adrA, b = adrB, c = adrC, d = adrD, e = adrE, f = adrF, g = adrG, h = adrH, sel = adr[3..5], out = loadRam8);
-    DMux8Way(in = loadRam8, sel = address[3..5], a = adrA, b = adrB, c = adrC, d = adrD, e = adrE, f = adrF, g = adrG, h = adrH);
-    Ram8(in = in, load = ram8AdrA, out = ramA);
-    Ram8(in = in, load = ram8AdrB, out = ramB);
-    Ram8(in = in, load = ram8AdrC, out = ramC);
-    Ram8(in = in, load = ram8AdrD, out = ramD);
-    Ram8(in = in, load = ram8AdrE, out = ramE);
-    Ram8(in = in, load = ram8AdrF, out = ramF);
-    Ram8(in = in, load = ram8AdrG, out = ramG);
-    Ram8(in = in, load = ram8AdrH, out = ramH);
-    Mux8Way16(a = regA, b = regB, c = regC, d = regD, e = regE, f = regF, g = regG, h = regH, sel = address, out = out); 
+        // which register in the block of 8 is determined by the lower 3 bits of address
+        // which ram8 is determined by load, and a dmux so only one ram8 is loading at at time, and the address is already determined as above
+        DMux8Way(in = load, sel = address[3..5], a = ram8AdrA, b = ram8AdrB, c = ram8AdrC, d = ram8AdrD, e = ram8AdrE, f = ram8AdrF, g = ram8AdrG, h = ram8AdrH);
+        RAM8(in = in, load = ram8AdrA, address = address[0..2], out = ramA);
+        RAM8(in = in, load = ram8AdrB, address = address[0..2], out = ramB);
+        RAM8(in = in, load = ram8AdrC, address = address[0..2], out = ramC);
+        RAM8(in = in, load = ram8AdrD, address = address[0..2], out = ramD);
+        RAM8(in = in, load = ram8AdrE, address = address[0..2], out = ramE);
+        RAM8(in = in, load = ram8AdrF, address = address[0..2], out = ramF);
+        RAM8(in = in, load = ram8AdrG, address = address[0..2], out = ramG);
+        RAM8(in = in, load = ram8AdrH, address = address[0..2], out = ramH);
+        Mux8Way16(a = ramA, b = ramB, c = ramC, d = ramD, e = ramE, f = ramF, g = ramG, h = ramH, sel = address[3..5], out = out);
 }
